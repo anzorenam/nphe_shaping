@@ -24,6 +24,7 @@ tend=1000.0
 M=50000
 Nz=50000
 R=5000
+ntime=np.arange(dt,100.0,dt)
 N=np.size(ntime)
 p=np.zeros([M,N])
 n0,pnum,t0=np.array(f.readline().split()[0:3],dtype=np.float)
