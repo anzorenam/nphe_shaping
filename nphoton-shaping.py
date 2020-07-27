@@ -14,11 +14,10 @@ import os
 
 t1=time.time()
 home=os.environ['HOME']
-dir='scibar_sim'
-name='{0}/{1}/scibar_photons-s16.csv'.format(home,dir)
+dir='scibar_sim/nphe_shaping'
+name='{0}/{1}/scibar_photons.csv'.format(home,dir)
 f=open(name,'r')
 
-ntime=np.arange(0.2,100.0,0.2)
 N=np.size(ntime)
 M=50000
 Nz=50000
@@ -30,8 +29,11 @@ nphe=np.zeros(M,dtype=np.uint16)
 # noise mu=2.51998mV s=1.34356mV
 alpha=2.0
 dt=0.2
-t=np.arange(0,1000,dt)
-tconv=np.arange(0,1999.8,dt)
+Fs=1.0/dt
+tend=1000.0
+t=np.arange(0,tend,dt)
+tconv=np.arange(0,2.0*tend-dt,dt)
+wfreq=2.0*np.pi*np.arange(0,Fs+1.0/(tend-dt),1/(tend-dt))
 Qpmt,sqpmt=0.938888,0.146729
 mtau,stau=0.377159,0.0157205
 tfun='TMath::Landau(x,{0},{1},1)'.format(mtau,stau)
@@ -109,8 +111,12 @@ for c in cf:
       a=(1.0/sigma)*a0
       k0=np.real((a[1]*np.conj(a[1]))*(a[2]*np.conj(a[2])))
       semi_g0=signal.lti([],[a[1],np.conj(a[1]),a[2],np.conj(a[2])],k0)
-      w,g0=signal.freqresp(semi_g0,)
+      w,g0=signal.freqresp(semi_g0,wfreq)
       for Gv in Gains:
         vgauss=Gv*vint*g0
         kpar+=1
         pe_stats[j,kpar]=np.amax(vgauss)
+
+t2=time.time()
+dtime=datetime.timedelta(seconds=(t2-t1))
+print('Tiempo total {0:1.2f} seg.'.format(dtime.total_seconds()))
