@@ -95,7 +95,7 @@ a0=np.array([-1.4766878,-1.4166647+0.5978596j,-1.2036832+1.2994843j])
 for c in cf:
   for r in rf:
     i_freq=fftp.fft(iphe,2*R-1,axis=1)
-    name='{0}/{1}/preamp-sim/trans_{2}{3}.dat'.format(home,dir,c,r)
+    name='{0}/{1}/electronics-sim/trans_{2}{3}.dat'.format(home,dir,c,r)
     zl_freq=np.loadtxt(name,usecols=(1,3),skiprows=2)
     zl_full=np.zeros((Nz,2))
     zl_full[0:Nhalf+1,0]=zl_freq[:,0]
@@ -114,8 +114,8 @@ for c in cf:
       semi_g0=signal.lti([],[a[1],np.conj(a[1]),a[2],np.conj(a[2])],k0)
       w,g0=signal.freqresp(semi_g0,wfreq)
       for Gv in Gains:
-        vgauss=Gv*vint*g0
         kpar+=1
+        vgauss=Gv*np.real(fftp.ifft(vint*g0))
         pe_stats[j,kpar]=np.amax(vgauss)
 
 t2=time.time()
