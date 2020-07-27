@@ -18,19 +18,19 @@ dir='scibar_sim/nphe_shaping'
 name='{0}/{1}/scibar_photons.csv'.format(home,dir)
 f=open(name,'r')
 
-N=np.size(ntime)
+dt=0.2
+Fs=1.0/dt
+tend=1000.0
 M=50000
 Nz=50000
 R=5000
+N=np.size(ntime)
 p=np.zeros([M,N])
 n0,pnum,t0=np.array(f.readline().split()[0:3],dtype=np.float)
 iphe=np.zeros([M,R])
 nphe=np.zeros(M,dtype=np.uint16)
 # noise mu=2.51998mV s=1.34356mV
 alpha=2.0
-dt=0.2
-Fs=1.0/dt
-tend=1000.0
 t=np.arange(0,tend,dt)
 tconv=np.arange(0,2.0*tend-dt,dt)
 wfreq=2.0*np.pi*np.arange(0,Fs+1.0/(tend-dt),1/(tend-dt))
