@@ -1,0 +1,37 @@
+preamp
+.include ada4891.mod
+.param cfed=400p
+.param rfed=12k
+.param cin=100p
+.param rin=100k
+
+x_u1 vp vn vdd vee vstep ada4891
+is vin 0 dc 0 ac 10mA
+r1 vin 0 {rin}
+c1 vin vn {cin}
+rf vn vstep {rfed}
+cf vn vstep {cfed}
+rpz vstep vout {rfed}
+cpz vstep vout {cfed}
+rdiff vout 0 1k
+c2 vdd 0 10u
+c3 vdd 0 0.1u
+c4 vee 0 10u
+c5 vee 0 0.1u
+vpos vdd 0 dc +2.5V
+vneg vee 0 dc -2.5V
+vin+ vp 0 0V
+
+.control
+echo transimpedance > trans_400p12k.dat
+set appendwrite
+noise v(vout) is lin 25000 1 2.5G
+setplot noise2
+wrdata trans_400p12k.dat v(onoise_total)
+ac lin 1 0.1 0.1
+wrdata trans_400p12k.dat real(vout)/10mA imag(vout)/10mA
+ac lin 25000 100k 2.5G
+wrdata trans_400p12k.dat real(vout)/10mA imag(vout)/10mA
+.endc
+
+.end
