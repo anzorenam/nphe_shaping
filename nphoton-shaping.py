@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.a7
+#!/usr/bin/env python3.7
 # -*- coding: utf8 -*-
 
 import numpy as np
@@ -15,7 +15,7 @@ import os
 t1=time.time()
 home=os.environ['HOME']
 dir='nphe_shaping'
-name='{0}/{1}/scibar_photons-s14.csv'.format(home,dir)
+name='{0}/{1}/scibar_photons-s15.csv'.format(home,dir)
 f=open(name,'r')
 
 dt=0.2
@@ -30,7 +30,6 @@ p=np.zeros([M,N])
 n0,pnum,t0=np.array(f.readline().split()[0:3],dtype=np.float)
 iphe=np.zeros([M,R])
 nphe=np.zeros(M,dtype=np.uint16)
-# noise mu=2.51998mV s=1.34356mV
 alpha=2.0
 t=np.arange(0,tend,dt)
 tconv=np.arange(0,2.0*tend-dt,dt)
@@ -42,14 +41,8 @@ Vsat=2500.0
 cf=['100p','200p','400p']
 rf=['3k','6k','12k']
 
-pe=np.array([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55>
-Npe=np.size(pe)
-
 tpeaks=[75,100,150]
 Gains=[1.0]
-Nois_amp=2.03568475e-06
-m=np.zeros(Npe)
-ds=np.zeros(Npe)
 mpar=np.size(cf)*np.size(rf)*np.size(tpeaks)*np.size(Gains)
 
 plot=True
@@ -86,6 +79,12 @@ pe_stats=np.zeros([Mevent,mpar+1])
 pe_stats[:,0]=nphe
 print(Mevent)
 print(np.amin(nphe),np.amax(nphe))
+
+elem=199
+pe=np.arange(0,elem)
+pe_hist,bi=np.histogram(nphe,bins=np.arange(0,elem+1))
+pe=bi[np.nonzero(pe_hist)]
+Npe=np.size(pe)
 
 kpar=0
 sigma0=np.exp(1)/np.sqrt(2.0*np.pi)
