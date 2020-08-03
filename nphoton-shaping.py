@@ -3,19 +3,25 @@
 
 import numpy as np
 import scipy.stats as stats
-import scipy.signal as signal
 import numpy.random as rnd
 import scipy.fftpack as fftp
 import ROOT
 import root_numpy as rnp
 import time
 import datetime
+import argparse
 import os
+
+parser=argparse.ArgumentParser()
+parser.add_argument('amp', help='select amp',type=int)
+parser.add_argument('nfile', help='select file',type=int)
+amp=args.amp
+nfile=args.nfile
 
 t1=time.time()
 home=os.environ['HOME']
 dir='nphe_shaping'
-name='{0}/{1}/scibar_photons-s15.csv'.format(home,dir)
+name='{0}/{1}/scibar_photons-s{2}.csv'.format(home,dir,nfile)
 f=open(name,'r')
 
 dt=0.2
@@ -40,10 +46,7 @@ taud=ROOT.TF1('tau0',tfun,0.1,2.0)
 Vsat=2500.0
 cf=['100p','200p','400p']
 rf=['3k','6k','12k']
-
-tpeaks=[75,100,150]
-Gains=[1.0]
-mpar=np.size(cf)*np.size(rf)*np.size(tpeaks)*np.size(Gains)
+mpar=np.size(cf)*np.size(rf)
 
 plot=True
 j=0
@@ -87,13 +90,11 @@ pe=bi[np.nonzero(pe_hist)]
 Npe=np.size(pe)
 
 kpar=0
-sigma0=np.exp(1)/np.sqrt(2.0*np.pi)
 Nhalf=int(Nz/2)
-a0=np.array([-1.4766878,-1.4166647+0.5978596j,-1.2036832+1.2994843j])
+i_freq=fftp.fft(iphe,2*R-1,axis=1)
 for c in cf:
   for r in rf:
-    i_freq=fftp.fft(iphe,2*R-1,axis=1)
-    name='{0}/{1}/electronics-sim/trans_{2}{3}.dat'.format(home,dir,c,r)
+    name='{0}/{1}/electronics-sim/trans-{2}_{3}{4}.dat'.format(home,dir,amp,c,r)
     zl_freq=np.loadtxt(name,usecols=(1,3),skiprows=2)
     zl_full=np.zeros((Nz,2))
     zl_full[0:Nhalf+1,0]=zl_freq[:,0]
@@ -102,20 +103,9 @@ for c in cf:
     zl_full[Nhalf+1:Nz,1]=-1.0*np.flip(zl_freq[1:Nhalf,1],0)
     zl_time=np.real(fftp.ifft(zl_full[:,0]+1j*zl_full[:,1]))[:R]
     z_conv=fftp.fft(zl_time,2*R-1)
-    vint=i_freq*z_conv
-    for tp in tpeaks:
-      fwtm=2.0*tp
-      tau0=fwtm/(2.0*sigma0*np.sqrt(2.0*np.log(15.55)))
-      sigma=tau0*sigma0
-      a=(1.0/sigma)*a0
-      k0=np.real((a[1]*np.conj(a[1]))*(a[2]*np.conj(a[2])))
-      semi_g0=signal.lti([],[a[1],np.conj(a[1]),a[2],np.conj(a[2])],k0)
-      t,g0=signal.impulse(semi_g0,T=t)
-      gfreq=fftp.fft(g0,2*R-1)
-      vgauss=np.real(fftp.ifft(gfreq*vint,axis=1))[:,:R]
-      for Gv in Gains:
-        kpar+=1
-        pe_stats[:,kpar]=np.amax(Gv*vgauss,axis=1)
+    vint=np.real(fftp.ifft(i_freq*z_conv,axis=1))[:,:R]
+    kpar+=1
+    pe_stats[:,kpar]=np.amax(vint,axis=1)
 
 nout='{0}/{1}/pe_stats.dat'.format(home,dir)
 np.savetxt(nout,pe_stats)
