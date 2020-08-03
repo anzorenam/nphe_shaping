@@ -8,7 +8,7 @@ rf vn vstep {rfed}
 cf vn vstep {cfed}
 rpz vstep vout {rfed}
 cpz vstep vout {cfed}
-rdiff vout 0 1k
+rout vout 0 10Meg
 c2 vdd 0 10u
 c3 vdd 0 0.1u
 c4 vee 0 10u
