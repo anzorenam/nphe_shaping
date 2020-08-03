@@ -74,7 +74,6 @@ for Rpar in [0,1,2]:
         ax[0,j].axis([0.1,140,0,Tmax])
         ax[0,j].set_xscale('log')
         ax[1,j].hist(totQ[m,:],bins=t0bins,log=True,alpha=0.5)
-        #print(np.size(tbins),np.amin(tot[m,:]),np.amax(tot[m,:]),tsat,phe_th,vth)
+        print(np.size(tbins),np.amin(tot[m,:]),np.amax(tot[m,:]),tsat,phe_th,vth)
         m+=1
-      #plt.savefig('tot_{0}d{1}{2}par.png'.format(d,Cpar,Rpar))
-  plt.show()
+      plt.savefig('tot_{0}d{1}{2}par.png'.format(d,Cpar,Rpar))
