@@ -6,7 +6,7 @@ Electronics simulation for scintillator bar telescope. Simulation includes:
 
 -Preamp and shaper function.
 
--Time over threshold convertion
+-Time over threshold conversion
 
 
 
