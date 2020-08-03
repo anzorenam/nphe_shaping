@@ -5,12 +5,25 @@ declare -a Rfed=("3k" "6k" "12k")
 
 Cin="100p"
 Rin="100k"
+
 for i in "${Cfed[@]}"
 do
   for j in "${Rfed[@]}"
   do
-    python netlist.py "$i" "$j" "$Cin" "$Rin"
-    ngspice -o sim.log -b preamp.cir > tem.txt
+    python netlist.py 0 "$i" "$j" "$Cin" "$Rin"
+    ngspice -o sim.log -b preamp-0.cir > tem.txt
+  done
+done
+
+rm sim.log
+rm tem.txt
+
+for i in "${Cfed[@]}"
+do
+  for j in "${Rfed[@]}"
+  do
+    python netlist.py 1 "$i" "$j" "$Cin" "$Rin"
+    ngspice -o sim.log -b preamp-1.cir > tem.txt
   done
 done
 
