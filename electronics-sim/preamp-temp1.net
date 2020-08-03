@@ -1,0 +1,29 @@
+preamp
+.include ada4807.mod
+
+x_u1 vp vn vdd vee vstep vdis ada4807
+r1 vin 0 {rin}
+c1 vin vn {cin}
+rf vn vstep {rfed}
+cf vn vstep {cfed}
+rpz vstep vout {rfed}
+cpz vstep vout {cfed}
+rout vout 0 10Meg
+c2 vdd 0 10u
+c3 vdd 0 0.1u
+c4 vee 0 10u
+c5 vee 0 0.1u
+vpos vdd 0 dc +5.0V
+vneg vee 0 dc -5.0V
+vin+ vp 0 0V
+von vdis 0 dc 2.0V
+
+.control
+set appendwrite
+noise v(vout) is lin 25000 1 2.5G
+setplot noise2
+ac lin 1 0.1 0.1
+ac lin 25000 100k 2.5G
+.endc
+
+.end
