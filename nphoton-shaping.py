@@ -15,6 +15,7 @@ import os
 parser=argparse.ArgumentParser()
 parser.add_argument('amp', help='select amp',type=int)
 parser.add_argument('nfile', help='select file',type=int)
+args=parser.parse_args()
 amp=args.amp
 nfile=args.nfile
 
@@ -107,7 +108,7 @@ for c in cf:
     kpar+=1
     pe_stats[:,kpar]=np.amax(vint,axis=1)
 
-nout='{0}/{1}/pe_stats.dat'.format(home,dir)
+nout='{0}/{1}/pe_stats-b{0}{1}.dat'.format(home,dir,amp,nfile)
 np.savetxt(nout,pe_stats)
 t2=time.time()
 dtime=datetime.timedelta(seconds=(t2-t1))
