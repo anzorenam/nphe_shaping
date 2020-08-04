@@ -40,7 +40,6 @@ else:
   a0=(1.0/sigma)*(1.2633573)
 td=1.0/(a0-1.0/tint)
 Rdiff=np.round(1.0e3*(td/Cdiff))
-print('Diferenciador: Rdiff= {0}ohms'.format(Rdiff))
 
 fnet=open('preamp-temp{0}.net'.format(amp),'r')
 fout=open('preamp-a{0}.cir'.format(amp),'w')
