@@ -14,9 +14,11 @@ import os
 
 parser=argparse.ArgumentParser()
 parser.add_argument('amp', help='select amp',type=int)
+parser.add_argument('degree', help='filter order',type=int)
 parser.add_argument('nfile', help='select file',type=int)
 args=parser.parse_args()
 amp=args.amp
+degree=args.degree
 nfile=args.nfile
 
 t1=time.time()
@@ -47,7 +49,8 @@ taud=ROOT.TF1('tau0',tfun,0.1,2.0)
 Vsat=2500.0
 cf=['100p','200p','400p']
 rf=['3k','6k','12k']
-mpar=np.size(cf)*np.size(rf)
+tpeaks=[75,100,125,150,175]
+mpar=np.size(cf)*np.size(rf)*np.size(tpeaks)
 
 plot=True
 j=0
@@ -93,22 +96,24 @@ Npe=np.size(pe)
 kpar=0
 Nhalf=int(Nz/2)
 i_freq=fftp.fft(iphe,2*R-1,axis=1)
-for c in cf:
-  for r in rf:
-    name='{0}/{1}/electronics-sim/trans-{2}_{3}{4}.dat'.format(home,dir,amp,c,r)
-    zl_freq=np.loadtxt(name,usecols=(1,3),skiprows=2)
-    zl_full=np.zeros((Nz,2))
-    zl_full[0:Nhalf+1,0]=zl_freq[:,0]
-    zl_full[0:Nhalf+1,1]=zl_freq[:,1]
-    zl_full[Nhalf+1:Nz,0]=np.flip(zl_freq[1:Nhalf,0],0)
-    zl_full[Nhalf+1:Nz,1]=-1.0*np.flip(zl_freq[1:Nhalf,1],0)
-    zl_time=np.real(fftp.ifft(zl_full[:,0]+1j*zl_full[:,1]))[:R]
-    z_conv=fftp.fft(zl_time,2*R-1)
-    vint=np.real(fftp.ifft(i_freq*z_conv,axis=1))[:,:R]
-    kpar+=1
-    pe_stats[:,kpar]=np.amax(vint,axis=1)
+for tp in tpeaks:
+  for c in cf:
+    for r in rf:
+      kpar+=1
+      name='{0}/{1}/electronics-sim/trans-{2}_tp{3}d{4}-{3}{4}.dat'.format(home,dir,amp,tp,degree,c,r)
+      zl_freq=np.loadtxt(name,usecols=(1,3),skiprows=2)
+      zl_full=np.zeros((Nz,2))
+      zl_full[0:Nhalf+1,0]=zl_freq[:,0]
+      zl_full[0:Nhalf+1,1]=zl_freq[:,1]
+      zl_full[Nhalf+1:Nz,0]=np.flip(zl_freq[1:Nhalf,0],0)
+      zl_full[Nhalf+1:Nz,1]=-1.0*np.flip(zl_freq[1:Nhalf,1],0)
+      zl_time=np.real(fftp.ifft(zl_full[:,0]+1j*zl_full[:,1]))[:R]
+      z_conv=fftp.fft(zl_time,2*R-1)
+      vint=np.real(fftp.ifft(i_freq*z_conv,axis=1))[:,:R]
+      pe_stats[:,kpar]=np.amax(vint,axis=1)
 
-nout='{0}/{1}/pe_stats-b{0}{1}.dat'.format(home,dir,amp,nfile)
+nout='{0}/{1}/pe_stats-b{2}_d{3}-{4}.dat'.format(home,dir,amp,nfile)
+f=open()
 np.savetxt(nout,pe_stats)
 t2=time.time()
 dtime=datetime.timedelta(seconds=(t2-t1))
