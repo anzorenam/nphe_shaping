@@ -100,7 +100,7 @@ for tp in tpeaks:
   for c in cf:
     for r in rf:
       kpar+=1
-      name='{0}/{1}/electronics-sim/trans-{2}_tp{3}d{4}-{3}{4}.dat'.format(home,dir,amp,tp,degree,c,r)
+      name='{0}/{1}/electronics-sim/trans-{2}_tp{3}d{4}-{5}{6}.dat'.format(home,dir,amp,tp,degree,c,r)
       zl_freq=np.loadtxt(name,usecols=(1,3),skiprows=2)
       zl_full=np.zeros((Nz,2))
       zl_full[0:Nhalf+1,0]=zl_freq[:,0]
@@ -112,8 +112,7 @@ for tp in tpeaks:
       vint=np.real(fftp.ifft(i_freq*z_conv,axis=1))[:,:R]
       pe_stats[:,kpar]=np.amax(vint,axis=1)
 
-nout='{0}/{1}/pe_stats-b{2}_d{3}-{4}.dat'.format(home,dir,amp,nfile)
-f=open()
+nout='{0}/{1}/pe_stats-b{2}_d{3}-{4}.dat'.format(home,dir,amp,degree,nfile)
 np.savetxt(nout,pe_stats)
 t2=time.time()
 dtime=datetime.timedelta(seconds=(t2-t1))
