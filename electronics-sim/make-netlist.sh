@@ -43,3 +43,5 @@ done
 
 rm sim.log
 rm tem.txt
+rm preamp-a0.cir
+rm preamp-a1.cir
