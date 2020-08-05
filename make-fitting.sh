@@ -20,6 +20,14 @@ for j in "${amps[@]}"
 do
   for k in "${crange[@]}"
   do
-    python tot-fitting.py "$j" "$k"
+    python tot-fitting.py "$j" 3 "$k"
+  done
+done
+
+for j in "${amps[@]}"
+do
+  for k in "${crange[@]}"
+  do
+    python tot-fitting.py "$j" 5 "$k"
   done
 done
