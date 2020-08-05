@@ -2,6 +2,7 @@
 # -*- coding: utf8 -*-
 
 import matplotlib as mat
+mat.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.signal as signal
@@ -47,15 +48,16 @@ vths=np.array([10.0,20,30,50])
 K=np.size(vths)
 pebins=np.arange(0,200)
 
-for scale in [0.5,1.0,2.0]:
+for scale in [0.5,1.0,1.5]:
   Tstep=scale
   Tmax=255*Tstep
   t0bins=np.arange(0,Tmax,Tstep)
-  dout='{0}/{1}/fitting/amp_stats{2}/tstep-{3}/'.format(home,dir,amp,scale)
+  dout='{0}/{1}/fitting/amp_stats{2}/tstep-{3}'.format(home,dir,amp,scale)
   fig,ax=plt.subplots(nrows=2,ncols=5)
-  for Tpar in [0,1,2,3,4]:
-    for Cpar in [0,1,2]:
-      for Rpar in [0,1,2]:
+  fig.set_size_inches(12,7)
+  for Cpar in [0,1,2]:
+    for Rpar in [0,1,2]:
+      for Tpar in [0,1,2,3,4]:
         pe=data[:,0]
         v0=data[:,9*Tpar+3*Cpar+Rpar+1]
         tesT=v0!=0
@@ -92,4 +94,4 @@ for scale in [0.5,1.0,2.0]:
           ax[1,Tpar].hist(totQ[m,:],bins=t0bins,log=True,alpha=0.5)
           print(degree,np.size(tbins),np.amin(tot[m,:]),np.amax(tot[m,:]),tsat,vth)
           m+=1
-      plt.savefig('{0}/tot_d{1}t{2}{3}{4}par.png'.format(dout,degree,Tpar,Cpar,Rpar))
+      plt.savefig('{0}/tot_{1}d{2}{3}par.png'.format(dout,degree,Cpar,Rpar),dpi=100)
