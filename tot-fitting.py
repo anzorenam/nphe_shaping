@@ -38,6 +38,7 @@ name='{0}/{1}/{2}.dat'.format(home,dir,nin)
 dt=0.2
 tend=1000.0
 t=np.arange(0,tend,dt)
+tpeaks=[75,100,125,150,175]
 a0_5d=np.array([-1.4766878,-1.4166647+0.5978596j,-1.2036832+1.2994843j])
 a0_3d=np.array([-1.2633573,-1.1490948+0.7864188j])
 sigma0=np.exp(1)/np.sqrt(2.0*np.pi)
@@ -63,7 +64,7 @@ for scale in [0.5,1.0,2.0]:
         M=np.size(v0,0)
         tot=np.zeros([K,M])
         totQ=np.zeros([K,M])
-        fwtm=2.0*tpeaks[j]
+        fwtm=2.0*tpeaks[Tpar]
         if degree==3:
           tau0=fwtm/(2.0*sigma0*np.sqrt(2.0*np.log(2.9)))
           sigma=tau0*sigma0
@@ -80,16 +81,15 @@ for scale in [0.5,1.0,2.0]:
         g0norm=(1.0/np.amax(g0))*g0
         pulse=np.transpose(v0[np.newaxis])*g0norm
         m=0
-        ax[1,j].hist(pe,bins=pebins,log=True)
+        ax[1,Tpar].hist(pe,bins=pebins,log=True)
         for vth in vths:
           tot[m,:]=timeovert(pulse,vth,M)
           totQ[m,:]=Tstep*np.digitize(tot[m,:],t0bins)
           tbins,tsat=np.unique(totQ[m,:],return_counts=True)
-          ax[0,j].scatter(pe,totQ[m,:],s=1.0)
-          ax[0,j].axis([0.1,140,0,Tmax])
-          ax[0,j].set_xscale('log')
-          ax[1,j].hist(totQ[m,:],bins=t0bins,log=True,alpha=0.5)
+          ax[0,Tpar].scatter(pe,totQ[m,:],s=1.0)
+          ax[0,Tpar].axis([0.1,140,0,Tmax])
+          ax[0,Tpar].set_xscale('log')
+          ax[1,Tpar].hist(totQ[m,:],bins=t0bins,log=True,alpha=0.5)
           print(degree,np.size(tbins),np.amin(tot[m,:]),np.amax(tot[m,:]),tsat,vth)
           m+=1
-        j+=1
-      plt.savefig('{0}/tot_{1}d{2}{3}par.png'.format(dout,degree,Cpar,Rpar))
+      plt.savefig('{0}/tot_d{1}t{2}{3}{4}par.png'.format(dout,degree,Tpar,Cpar,Rpar))
