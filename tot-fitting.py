@@ -44,19 +44,19 @@ a0_5d=np.array([-1.4766878,-1.4166647+0.5978596j,-1.2036832+1.2994843j])
 a0_3d=np.array([-1.2633573,-1.1490948+0.7864188j])
 sigma0=np.exp(1)/np.sqrt(2.0*np.pi)
 data=np.loadtxt(name,comments='#')
-vths=np.array([10.0,20,30,50])
+vths=np.array([10,20,30,50])
 K=np.size(vths)
 pebins=np.arange(0,200)
 
-for scale in [0.5,1.0,1.5]:
+for scale in [0.5,1.0,1.25]:
   Tstep=scale
   Tmax=255*Tstep
   t0bins=np.arange(0,Tmax,Tstep)
   dout='{0}/{1}/fitting/amp_stats{2}/tstep-{3}'.format(home,dir,amp,scale)
-  fig,ax=plt.subplots(nrows=2,ncols=5)
-  fig.set_size_inches(12,7)
   for Cpar in [0,1,2]:
     for Rpar in [0,1,2]:
+      fig,ax=plt.subplots(nrows=2,ncols=5)
+      fig.set_size_inches(12,7)
       for Tpar in [0,1,2,3,4]:
         pe=data[:,0]
         v0=data[:,9*Tpar+3*Cpar+Rpar+1]
@@ -89,9 +89,8 @@ for scale in [0.5,1.0,1.5]:
           totQ[m,:]=Tstep*np.digitize(tot[m,:],t0bins)
           tbins,tsat=np.unique(totQ[m,:],return_counts=True)
           ax[0,Tpar].scatter(pe,totQ[m,:],s=1.0)
-          ax[0,Tpar].axis([0.1,140,0,Tmax])
+          ax[0,Tpar].axis([0.9,200,0,Tmax])
           ax[0,Tpar].set_xscale('log')
           ax[1,Tpar].hist(totQ[m,:],bins=t0bins,log=True,alpha=0.5)
-          print(degree,np.size(tbins),np.amin(tot[m,:]),np.amax(tot[m,:]),tsat,vth)
           m+=1
-      plt.savefig('{0}/tot_{1}d{2}{3}par.png'.format(dout,degree,Cpar,Rpar),dpi=100)
+      plt.savefig('{0}/tot_d{1}c{2}-{3}{4}par.png'.format(dout,degree,crange,Cpar,Rpar),dpi=100)
