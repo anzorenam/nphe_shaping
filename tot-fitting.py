@@ -32,7 +32,7 @@ crange=args.crange
 
 home=os.environ['HOME']
 dir='nphe_shaping'
-nin='/pe_stats/pe_stats-a{0}_d{1}{2}'.format(amp,degree,crange)
+nin='pe_stats/pe_stats-a{0}_d{1}c{2}'.format(amp,degree,crange)
 name='{0}/{1}/{2}.dat'.format(home,dir,nin)
 
 dt=0.2
