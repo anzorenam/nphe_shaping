@@ -30,7 +30,7 @@ f=open(name,'r')
 dt=0.2
 Fs=1.0/dt
 tend=1000.0
-M=50000
+M=25000
 Nz=50000
 R=5000
 ntime=np.arange(dt,100.0,dt)
@@ -46,13 +46,11 @@ Qpmt,sqpmt=0.938888,0.146729
 mtau,stau=0.377159,0.0157205
 tfun='TMath::Landau(x,{0},{1},1)'.format(mtau,stau)
 taud=ROOT.TF1('tau0',tfun,0.1,2.0)
-Vsat=2500.0
 cf=['100p','200p','400p']
 rf=['3k','6k','12k']
 tpeaks=[75,100,125,150,175]
 mpar=np.size(cf)*np.size(rf)*np.size(tpeaks)
 
-plot=True
 j=0
 jphoton=0
 for line in f:
